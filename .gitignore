@@ -2,4 +2,5 @@
 /coverage/
 /vendor/
 /logs/*
+app/logs/
 !/logs/README.md
