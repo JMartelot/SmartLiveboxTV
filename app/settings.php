@@ -8,7 +8,7 @@ return function (ContainerBuilder $containerBuilder) {
         require_once __DIR__ . '/config/livebox.php',
         require_once __DIR__ . '/config/logger.php',
         [
-            'displayErrorDetails' => true,
+            'displayErrorDetails' => false,
         ]
     );
 

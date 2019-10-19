@@ -50,15 +50,22 @@ class Client
     private $settings;
 
     /**
+     * @var boolean
+     */
+    private $debug;
+
+    /**
      * Client constructor.
      *
      * @param LoggerInterface $logger
      * @param array           $settings
+     * @param                 $debug
      */
-    public function __construct(LoggerInterface $logger, array $settings)
+    public function __construct(LoggerInterface $logger, array $settings, $debug)
     {
         $this->logger   = $logger;
         $this->settings = $settings;
+        $this->debug    = $debug;
         $this->client   = $this->initClient();
     }
 
@@ -98,6 +105,20 @@ class Client
     }
 
     /**
+     *
+     * @return mixed|\Psr\Http\Message\ResponseInterface
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function status()
+    {
+        $params = [
+            'operation' => API::OPERATION['STATUS'],
+        ];
+
+        return $this->exec($params);
+    }
+
+    /**
      * Init Guzzle HTTP Client to query livebox
      *
      * @return \GuzzleHttp\Client
@@ -105,30 +126,35 @@ class Client
     private function initClient()
     {
         $stack = HandlerStack::create();
-        $stack->push(
-            Middleware::log(
-                $this->logger,
-                new MessageFormatter('{req_body} - {res_body}')
-            )
-        );
+
+        if ($this->debug) {
+            $stack->push(
+                Middleware::log(
+                    $this->logger,
+                    new MessageFormatter('{req_body} - {res_body}')
+                )
+            );
+        }
 
         return new \GuzzleHttp\Client([
-            'handler' => $stack
+            'handler' => $stack,
         ]);
     }
 
     /**
      * @param $params
      *
-     * @return mixed|\Psr\Http\Message\ResponseInterface
+     * @return mixed
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     private function exec(array $params)
     {
         $url = sprintf(self::BASE_URL, $this->settings['ip'], $this->settings['port']);
 
-        return $this->client->request('GET', $url, [
+        $response =  $this->client->request('GET', $url, [
             'query' => $params,
         ]);
+
+        return json_decode($response->getBody()->getContents())->result;
     }
 }

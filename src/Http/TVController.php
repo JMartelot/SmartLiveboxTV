@@ -44,6 +44,12 @@ class TVController extends BaseController
         $response->withHeader('Content-Type', 'application/json');
 
         try {
+
+            // Do not perform request if box is already on
+            if (!intval($this->client->status()->data->activeStandbyState)) {
+                return $response->withStatus(204);
+            }
+
             $this->client->tv(API::TV_KEY_COMMAND['ON']);
         } catch (GuzzleException $e) {
             return $response->withStatus(500, 'Error, querying livebox');
@@ -64,6 +70,11 @@ class TVController extends BaseController
         $response->withHeader('Content-Type', 'application/json');
 
         try {
+            // Do not perform request if box is already off
+            if (intval($this->client->status()->data->activeStandbyState)) {
+                return $response->withStatus(204);
+            }
+
             $this->client->tv(API::TV_KEY_COMMAND['OFF']);
         } catch (GuzzleException $e) {
             return $response->withStatus(500, 'Error, querying livebox');

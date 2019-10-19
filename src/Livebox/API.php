@@ -32,6 +32,7 @@ class API
     const OPERATION = [
         'TV'      => '01',
         'CHANNEL' => '09',
+        'STATUS'  => '10',
     ];
 
     const TV_KEY_COMMAND = [

@@ -64,7 +64,7 @@ class VolumeController extends BaseController
         $response->withHeader('Content-Type', 'application/json');
 
         try {
-            $this->client->tv(API::TV_KEY_COMMAND['VOL+']);
+            $this->client->tv(API::TV_KEY_COMMAND['MUTE']);
         } catch (GuzzleException $e) {
             return $response->withStatus(500, 'Error, querying livebox');
         }

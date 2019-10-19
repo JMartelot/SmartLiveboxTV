@@ -33,7 +33,7 @@ return function (ContainerBuilder $containerBuilder) {
             $config = $container->get('config');
 
             /** @var array $config */
-            return new Client($logger, $config['livebox']);
+            return new Client($logger, $config['livebox'], $config['displayErrorDetails']);
         },
 
     ]);

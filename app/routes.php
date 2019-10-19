@@ -29,37 +29,5 @@ return function (App $app) {
     $app->get('/volume/up', sprintf('%s:up', VolumeController::class));
     $app->get('/volume/down', sprintf('%s:down', VolumeController::class));
     $app->get('/volume/mute', sprintf('%s:mute', VolumeController::class));
-    $app->get('/test/{input}', function ($request, $response, $args) {
-        $channels = [
-            'TF1',
-            'FRANCE_23_1_108',
-            'FRANCE_3',
-            'CANAL_+',
-            'FRANCE_5',
-        ];
-
-        $closest = -1;
-        $closestWord = "";
-//        $fmt = new \NumberFormatter( 'fr_FR', \NumberFormatter::SPELLOUT );
-
-        foreach ($channels as $channel){
-
-//            $result = preg_replace_callback("/(\d+)/", $channel, function($matches){
-//
-//                var_dump($matches[0]);
-//            });
-
-
-            $distance = levenshtein($args['input'], $channel);
-
-            if($closest === -1 || $distance < $closest){
-                $closest = $distance;
-                $closestWord = $channel;
-            }
-        }
-        var_dump($closestWord);;
-
-        die;
-    });
 };
 
